@@ -31,8 +31,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const grid = document.getElementById("grid");
-            const squares = Array(100).fill(null);
-            const emailRecipient = "robbycraig8@yahoo.com";
+            let squares = Array(100).fill(null);
+            const emailRecipient = "robbycraig8@gmail.com";
             
             function renderGrid() {
                 grid.innerHTML = "";
@@ -52,18 +52,21 @@
 
             function reserveSquare(index) {
                 const name = prompt("Enter your name:");
-                const contact = prompt("Enter your phone or email:");
-                if (name && contact) {
-                    squares[index] = { name, contact };
-                    sendEmailNotification(name, contact, index);
-                    renderGrid();
-                    alert("Thank you for reserving a square! The organizer will contact you for payment.");
-                }
+                if (!name) return;
+                const contact = prompt("Enter your phone number or email:");
+                if (!contact) return;
+                const paymentMethod = prompt("Select payment method: Venmo, CashApp, PayPal, Apple Pay, or Cash/Check:");
+                if (!paymentMethod) return;
+                
+                squares[index] = { name, contact, paymentMethod };
+                sendEmailNotification(name, contact, paymentMethod, index);
+                renderGrid();
+                alert("Thank you for reserving a square! The organizer will contact you for payment.");
             }
             
-            function sendEmailNotification(name, contact, index) {
+            function sendEmailNotification(name, contact, paymentMethod, index) {
                 const subject = encodeURIComponent("New Square Reserved");
-                const body = encodeURIComponent(`A new square has been reserved:\n\nName: ${name}\nContact: ${contact}\nSquare Number: ${index}`);
+                const body = encodeURIComponent(`A new square has been reserved:\n\nName: ${name}\nContact: ${contact}\nPayment Method: ${paymentMethod}\nSquare Number: ${index}`);
                 const mailtoLink = `mailto:${emailRecipient}?subject=${subject}&body=${body}`;
                 window.location.href = mailtoLink;
             }
