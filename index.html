@@ -5,21 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Bowl Squares Fundraiser</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(10, 50px); grid-template-rows: repeat(10, 50px); gap: 2px; margin: 20px auto; }
-        .square { width: 50px; height: 50px; border: 1px solid black; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f0f0f0; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f8f8f8; }
+        .container { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+        .grid-wrapper { display: flex; align-items: center; }
+        .grid-labels { display: flex; flex-direction: column; align-items: flex-end; margin-right: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(10, 60px); grid-template-rows: repeat(10, 60px); gap: 2px; border: 2px solid black; }
+        .square { width: 60px; height: 60px; border: 1px solid black; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #ffffff; font-size: 12px; font-weight: bold; }
         .reserved { background-color: lightgray; pointer-events: none; }
+        .team-label { font-size: 18px; font-weight: bold; margin: 5px 0; }
     </style>
 </head>
 <body>
     <h1>Super Bowl Squares Fundraiser</h1>
     <h2>KC Chiefs vs. PHI Eagles</h2>
-    <div class="grid" id="grid"></div>
+    <div class="container">
+        <div class="team-label">PHILADELPHIA EAGLES</div>
+        <div class="grid-wrapper">
+            <div class="grid-labels">
+                <div class="team-label" style="writing-mode: vertical-rl; transform: rotate(180deg);">KANSAS CITY CHIEFS</div>
+            </div>
+            <div class="grid" id="grid"></div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const grid = document.getElementById("grid");
             const squares = Array(100).fill(null);
+            const emailRecipient = "robbycraig8@yahoo.com";
             
             function renderGrid() {
                 grid.innerHTML = "";
@@ -42,9 +55,17 @@
                 const contact = prompt("Enter your phone or email:");
                 if (name && contact) {
                     squares[index] = { name, contact };
+                    sendEmailNotification(name, contact, index);
                     renderGrid();
                     alert("Thank you for reserving a square! The organizer will contact you for payment.");
                 }
+            }
+            
+            function sendEmailNotification(name, contact, index) {
+                const subject = encodeURIComponent("New Square Reserved");
+                const body = encodeURIComponent(`A new square has been reserved:\n\nName: ${name}\nContact: ${contact}\nSquare Number: ${index}`);
+                const mailtoLink = `mailto:${emailRecipient}?subject=${subject}&body=${body}`;
+                window.location.href = mailtoLink;
             }
             
             renderGrid();
