@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Bowl Squares Fundraiser</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(10, 50px); grid-template-rows: repeat(10, 50px); gap: 2px; margin: 20px auto; }
+        .square { width: 50px; height: 50px; border: 1px solid black; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f0f0f0; }
+        .reserved { background-color: lightgray; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <h1>Super Bowl Squares Fundraiser</h1>
+    <h2>KC Chiefs vs. PHI Eagles</h2>
+    <div class="grid" id="grid"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const grid = document.getElementById("grid");
+            const squares = Array(100).fill(null);
+            
+            function renderGrid() {
+                grid.innerHTML = "";
+                squares.forEach((entry, index) => {
+                    const square = document.createElement("div");
+                    square.classList.add("square");
+                    if (entry) {
+                        square.classList.add("reserved");
+                        square.textContent = entry.name;
+                    } else {
+                        square.textContent = "Available";
+                        square.addEventListener("click", () => reserveSquare(index));
+                    }
+                    grid.appendChild(square);
+                });
+            }
+
+            function reserveSquare(index) {
+                const name = prompt("Enter your name:");
+                const contact = prompt("Enter your phone or email:");
+                if (name && contact) {
+                    squares[index] = { name, contact };
+                    renderGrid();
+                    alert("Thank you for reserving a square! The organizer will contact you for payment.");
+                }
+            }
+            
+            renderGrid();
+        });
+    </script>
+</body>
+</html>
